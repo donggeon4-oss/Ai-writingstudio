@@ -1,164 +1,232 @@
-/* ------------------------------
-   전체 배경
------------------------------- */
-.workspace-bg {
-  background: linear-gradient(to bottom right, #ffe8df, #ffd8c7, #fff2e8);
-  background-attachment: fixed;
-  min-height: 100vh;
+/* =============================== */
+/* GLOBAL */
+/* =============================== */
+
+body {
   margin: 0;
-  padding: 0;
+  font-family: 'Pretendard', sans-serif;
+  background: linear-gradient(
+    180deg,
+    #fde5df 0%,
+    #ffd9cb 25%,
+    #ffcfb7 50%,
+    #ffe3cf 75%,
+    #fff1e8 100%
+  );
+  color: #5c4133;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* ------------------------------
-   그리드와 레이아웃
------------------------------- */
-.workspace-grid {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  height: 100vh;
+/* =============================== */
+/* HEADER (위쪽 Ultimate • AI 같은 느낌) */
+/* =============================== */
+
+.header {
+  padding: 20px 0 10px;
+  text-align: center;
+  color: #d27a60;
+  font-size: 16px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
-/* ------------------------------
-   사이드바
------------------------------- */
-.sidebar {
-  padding: 25px;
-  color: #444;
-  border-right: 1px solid #f2cabc;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
+/* =============================== */
+/* TITLE AREA */
+/* =============================== */
+
+.tool-container {
+  padding: 40px 16px 60px;
+  text-align: center;
 }
 
-.glass {
-  backdrop-filter: blur(15px);
-  background: rgba(255,255,255,0.55);
-  border-radius: 0 18px 18px 0;
-}
-
-.logo-title {
-  font-size: 22px;
+.title {
+  font-size: 40px;
   font-weight: 700;
-  color: #ff6f42;
+  color: #5b4034;
+  margin-bottom: 10px;
 }
 
-.logo-sub {
-  font-size: 13px;
-  color: #666;
-  margin-top: 4px;
+.subtitle {
+  font-size: 16px;
+  color: #7d5d4d;
+  opacity: 0.85;
 }
 
-/* 메뉴 */
-.menu-section {
-  margin-top: 20px;
+/* =============================== */
+/* INPUT 카드 (큰 살구색 박스) */
+/* =============================== */
+
+.glass-panel {
+  margin: 30px auto 0;
+  padding: 26px;
+  max-width: 900px;
+
+  background: rgba(255, 240, 230, 0.78);
+  border-radius: 26px;
+  border: 1px solid rgba(255, 205, 185, 0.9);
+  backdrop-filter: blur(18px);
+
+  box-shadow: 0 18px 38px rgba(255, 160, 130, 0.32);
 }
 
-.menu-label {
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 6px;
-  color: #ff6b3d;
-}
-
-.menu-btn {
+.input-box {
   width: 100%;
-  background: #ffe9dd;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: left;
-  margin-bottom: 6px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-.menu-btn:hover {
-  background: #ffd4c3;
-}
+  height: 170px;
+  padding: 18px;
+  border-radius: 20px;
 
-/* ------------------------------
-   메인 화면
------------------------------- */
-.main-panel {
-  padding: 35px 40px;
-  overflow-y: auto;
-}
+  border: 1px solid rgba(255, 205, 185, 0.9);
+  background: rgba(255, 247, 242, 0.96);
+  backdrop-filter: blur(10px);
 
-/* 패널 */
-.panel {
-  padding: 22px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.9);
-  margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-}
-
-.glass-white {
-  backdrop-filter: blur(12px);
-}
-
-.panel-label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #555;
-}
-
-/* 입력 */
-textarea {
-  width: 100%;
-  height: 180px;
-  padding: 15px;
-  border-radius: 12px;
-  background: #fffdfa;
-  border: 1px solid #f8cdbc;
   font-size: 15px;
+  color: #5c4133;
+  outline: none;
   resize: none;
 }
 
-/* 출력 */
-.big-output pre {
-  height: 280px;
-  padding: 15px;
-  overflow-y: auto;
-  background: #fffdfa;
-  border-radius: 12px;
-  border: 1px solid #f8cdbc;
+/* =============================== */
+/* SELECT (보통 / 짧게 / 길게) */
+/* =============================== */
+
+.select-box {
+  margin: 22px auto 0;
+  padding: 10px 18px;
+  font-size: 15px;
+
+  border-radius: 18px;
+  border: 1px solid rgba(255, 205, 185, 0.9);
+  background: rgba(255, 242, 235, 0.96);
+  color: #5c4133;
+
+  backdrop-filter: blur(10px);
 }
 
-/* 옵션 */
-.options-panel {
+/* =============================== */
+/* BUTTON ROW */
+/* =============================== */
+
+.button-row {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 26px;
 }
 
-select {
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #f4bfa7;
-}
+/* =============================== */
+/* MAIN BUTTONS – 배경에 어울리는 살구 그라데이션 */
+/* =============================== */
 
-/* 버튼 */
-.btn-box {
-  display: flex;
-  gap: 10px;
-}
+.ai-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 
-.btn {
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
+  padding: 14px 22px;
+  border-radius: 18px;
   border: none;
+  cursor: pointer;
+
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+
+  /* 기본 버튼도 살구빛 톤 */
+  background: rgba(255, 240, 230, 0.95);
+  color: #5c3a2e;
+
+  box-shadow:
+    0 8px 22px rgba(255, 150, 120, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.6);
+
+  transition: 0.2s ease;
 }
 
-.btn.primary {
-  background: #ff7a4f;
-  color: #fff;
+.ai-btn:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 30px rgba(255, 150, 120, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
-.btn.reset {
-  background: #ffe4d8;
+.ai-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 5px 16px rgba(255, 150, 120, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 
-.btn.copy {
-  background: #ffd2c0;
+/* 대표 버튼 (요약하기 같은 첫 번째 버튼) */
+.ai-btn.primary {
+  background: linear-gradient(135deg, #ff947b 0%, #ff6f61 50%, #ff5a61 100%);
+  color: #ffffff;
+  box-shadow:
+    0 14px 34px rgba(255, 120, 100, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+/* 복사 / 초기화 같은 서브 버튼은 좀 더 연한 살구톤 */
+.ai-btn.copy,
+.ai-btn.reset {
+  background: rgba(255, 244, 237, 0.98);
+  box-shadow: 0 6px 18px rgba(255, 170, 140, 0.28);
+}
+
+/* 아이콘 스타일 (이모지/아이콘이 있을 때) */
+.ai-btn i {
+  font-size: 17px;
+  margin-right: 4px;
+  color: #d97c63;
+}
+
+.ai-btn.primary i {
+  color: #ffffff;
+}
+
+/* =============================== */
+/* OUTPUT BOX */
+/* =============================== */
+
+.output-box {
+  margin: 30px auto 40px;
+  max-width: 900px;
+  padding: 22px;
+
+  background: rgba(255, 242, 235, 0.9);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 205, 185, 0.8);
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 10px 28px rgba(255, 160, 130, 0.28);
+
+  font-size: 15px;
+  color: #5c3a2e;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* =============================== */
+/* RESPONSIVE */
+/* =============================== */
+
+@media (max-width: 600px) {
+  .tool-container {
+    padding: 30px 16px 40px;
+  }
+
+  .glass-panel {
+    padding: 20px;
+  }
+
+  .button-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ai-btn {
+    width: 100%;
+  }
 }
