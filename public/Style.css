@@ -1,0 +1,164 @@
+/* ------------------------------
+   전체 배경
+------------------------------ */
+.workspace-bg {
+  background: linear-gradient(to bottom right, #ffe8df, #ffd8c7, #fff2e8);
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------------------------
+   그리드와 레이아웃
+------------------------------ */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100vh;
+}
+
+/* ------------------------------
+   사이드바
+------------------------------ */
+.sidebar {
+  padding: 25px;
+  color: #444;
+  border-right: 1px solid #f2cabc;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.glass {
+  backdrop-filter: blur(15px);
+  background: rgba(255,255,255,0.55);
+  border-radius: 0 18px 18px 0;
+}
+
+.logo-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ff6f42;
+}
+
+.logo-sub {
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* 메뉴 */
+.menu-section {
+  margin-top: 20px;
+}
+
+.menu-label {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #ff6b3d;
+}
+
+.menu-btn {
+  width: 100%;
+  background: #ffe9dd;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: left;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.menu-btn:hover {
+  background: #ffd4c3;
+}
+
+/* ------------------------------
+   메인 화면
+------------------------------ */
+.main-panel {
+  padding: 35px 40px;
+  overflow-y: auto;
+}
+
+/* 패널 */
+.panel {
+  padding: 22px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.9);
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+
+.glass-white {
+  backdrop-filter: blur(12px);
+}
+
+.panel-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* 입력 */
+textarea {
+  width: 100%;
+  height: 180px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #fffdfa;
+  border: 1px solid #f8cdbc;
+  font-size: 15px;
+  resize: none;
+}
+
+/* 출력 */
+.big-output pre {
+  height: 280px;
+  padding: 15px;
+  overflow-y: auto;
+  background: #fffdfa;
+  border-radius: 12px;
+  border: 1px solid #f8cdbc;
+}
+
+/* 옵션 */
+.options-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #f4bfa7;
+}
+
+/* 버튼 */
+.btn-box {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn.primary {
+  background: #ff7a4f;
+  color: #fff;
+}
+
+.btn.reset {
+  background: #ffe4d8;
+}
+
+.btn.copy {
+  background: #ffd2c0;
+}

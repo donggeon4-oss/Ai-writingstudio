@@ -1,339 +1,233 @@
-/* ======================================= */
-/* GLOBAL BACKGROUND */
-/* ======================================= */
-body.workspace-bg {
+/* =============================== */
+/* GLOBAL */
+/* =============================== */
+
+body {
   margin: 0;
   font-family: 'Pretendard', sans-serif;
   background: linear-gradient(
-    180deg,
-    #fde5df 0%,
-    #ffd9cb 25%,
-    #ffcfb7 50%,
-    #ffe3cf 75%,
-    #fff1e8 100%
+    135deg,
+    #ffe8ef 0%,
+    #ffd6c5 25%,
+    #ffc59c 55%,
+    #ffe3b1 100%
   );
   color: #5c4133;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* =============================== */
+/* HEADER */
+/* =============================== */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px 40px;
+  background: rgba(255, 240, 230, 0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 210, 190, 0.8);
   display: flex;
   justify-content: center;
-  padding: 0;
-  box-sizing: border-box;
+  z-index: 10;
 }
 
-/* ======================================= */
-/* GRID LAYOUT */
-/* ======================================= */
-.workspace-grid {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  width: 100%;
-  max-width: 1400px;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-
-/* ======================================= */
-/* SIDEBAR */
-/* ======================================= */
-.sidebar {
-  padding: 32px 22px;
-  background: rgba(255, 240, 230, 0.55);
-  border-right: 1px solid rgba(255, 200, 180, 0.55);
-  backdrop-filter: blur(22px);
-
-  box-shadow: 4px 0 24px rgba(255, 150, 120, 0.2);
-}
-
-.logo-title {
-  font-size: 20px;
+.logo {
+  font-size: 22px;
   font-weight: 800;
+  letter-spacing: 0.1em;
   color: #e5674e;
-  text-shadow: 0 0 10px rgba(255, 150, 120, 0.45);
-}
-
-.logo-sub {
-  font-size: 12px;
-  opacity: 0.65;
-  margin-top: -4px;
-}
-
-.menu-section {
-  margin-top: 30px;
-}
-
-.menu-label {
-  font-size: 13px;
-  opacity: 0.55;
-  margin-bottom: 12px;
-  display: block;
-}
-
-.menu-btn {
-  display: block;
-  width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-
-  font-size: 14px;
-  text-align: left;
-
-  border-radius: 14px;
-  border: 1px solid rgba(255, 200, 180, 0.55);
-
-  background: rgba(255, 245, 240, 0.85);
-
-  box-shadow: 0 4px 12px rgba(255, 150, 130, 0.15);
-
   cursor: pointer;
-  transition: 0.2s ease;
+  text-shadow: 0 0 12px rgba(255, 150, 120, 0.45);
 }
 
-.menu-btn:hover {
-  background: rgba(255, 230, 220, 0.95);
-  transform: translateY(-2px);
+/* =============================== */
+/* TITLE */
+/* =============================== */
+
+.tool-container {
+  padding-top: 120px;
+  text-align: center;
+  width: 100%;
 }
 
-/* ======================================= */
-/* MAIN PANEL */
-/* ======================================= */
-.main-panel {
-  padding: 50px 60px;
-  box-sizing: border-box;
-}
-
-.panel-header h2 {
-  font-size: 30px;
+.title {
+  font-size: 42px;
   font-weight: 800;
-  color: #5c3a2e;
-}
-
-.panel-desc {
-  margin-top: 8px;
-  font-size: 15px;
-  opacity: 0.6;
-}
-
-/* ======================================= */
-/* PANEL BLOCKS */
-/* ======================================= */
-.panel {
-  margin-top: 28px;
-  padding: 30px;
-  background: rgba(255, 240, 230, 0.6);
-  border: 1px solid rgba(255, 205, 185, 0.75);
-  border-radius: 22px;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 6px 28px rgba(255, 150, 120, 0.25);
-}
-
-.panel-label {
-  display: block;
-  font-size: 15px;
-  margin-bottom: 14px;
-  color: #6a4539;
-  font-weight: 700;
-}
-
-/* ======================================= */
-/* TEXTAREA */
-/* ======================================= */
-textarea#userInput {
-  width: 100%;
-  height: 165px;
-
-  padding: 16px;
-  border-radius: 16px;
-
-  border: 1px solid rgba(255, 200, 180, 0.8);
-  background: rgba(255, 245, 240, 0.9);
-
-  color: #5c3a2e;
-  font-size: 15px;
-
-  resize: none;
-  outline: none;
-
-  box-sizing: border-box;
-  backdrop-filter: blur(12px);
-
-  margin-top: 6px;
-  margin-bottom: 6px;
-
-  box-shadow: inset 0 0 8px rgba(255, 150, 120, 0.15);
-}
-
-/* ======================================= */
-/* OPTIONS PANEL */
-/* ======================================= */
-.options-panel {
-  display: flex;
-  gap: 26px;
-  flex-wrap: wrap;
-  margin-top: 14px;
-}
-
-.opt-box {
-  flex: 1;
-  min-width: 160px;
-}
-
-select {
-  width: 100%;
-  padding: 14px 16px;
-
-  background: rgba(255, 240, 230, 0.95);
-  border: 1px solid rgba(255, 200, 180, 0.85);
-
   color: #5c4133;
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 16px;
+  opacity: 0.75;
+}
+
+/* =============================== */
+/* GLASS PANEL */
+/* =============================== */
+
+.glass-panel {
+  margin: 34px auto;
+  padding: 32px;
+  max-width: 820px;
+
+  background: rgba(255, 245, 240, 0.55);
+  border: 1px solid rgba(255, 210, 190, 0.9);
+  border-radius: 22px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 18px 48px rgba(255, 150, 120, 0.35);
+}
+
+/* =============================== */
+/* INPUT BOX */
+/* =============================== */
+
+.input-box {
+  width: 100%;
+  height: 160px;
+  padding: 16px;
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 200, 180, 0.9);
+  background: rgba(255, 240, 230, 0.65);
+  backdrop-filter: blur(10px);
+
+  font-size: 15px;
+  color: #5c4133;
+
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  outline: none;
+  resize: none;
+}
+
+/* =============================== */
+/* SELECT BOX */
+/* =============================== */
+
+.select-box {
+  margin-top: 18px;
+  padding: 10px 18px;
   font-size: 14px;
 
-  border-radius: 16px;
+  border-radius: 12px;
+  background: rgba(255, 240, 230, 0.7);
+  border: 1px solid rgba(255, 200, 180, 0.9);
+  color: #5c4133;
+
   backdrop-filter: blur(12px);
-
   cursor: pointer;
-  transition: 0.15s ease;
 }
 
-select:hover {
-  background: rgba(255, 232, 220, 0.95);
-}
-
-/* ======================================= */
+/* =============================== */
 /* BUTTONS */
-/* ======================================= */
-.btn-box {
+/* =============================== */
+
+.button-row {
   display: flex;
-  gap: 14px;
+  gap: 12px;
+  margin-top: 22px;
   flex-wrap: wrap;
-  align-items: center;
-  margin-top: 18px;
+  justify-content: center;
 }
 
-.btn {
-  padding: 16px 30px;
+/* MAIN BUTTON STYLE */
+.ai-btn {
+  padding: 12px 20px;
+  border-radius: 14px;
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.2px;
 
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
+  color: #5c3a2e;
+  background: rgba(255, 240, 230, 0.55);
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  border: 1px solid rgba(255, 210, 190, 0.9);
+  backdrop-filter: blur(14px);
+
+  box-shadow: 0 8px 28px rgba(255, 120, 100, 0.35),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.4);
 
   transition: 0.25s ease;
+  cursor: pointer;
 }
 
-/* PRIMARY BUTTON */
-.btn.primary {
-  background: linear-gradient(
-    135deg,
-    #ffb9a2 0%,
-    #ff8f7a 45%,
-    #ff766c 100%
-  );
-  color: #fff;
-
-  box-shadow:
-    0 12px 28px rgba(255, 140, 120, 0.35),
-    inset 0 0 8px rgba(255, 255, 255, 0.35);
-}
-
-.btn.primary:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    0 14px 32px rgba(255, 130, 110, 0.45),
-    inset 0 0 10px rgba(255, 255, 255, 0.45);
-}
-
-/* RESET BUTTON */
-.btn.reset {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 245, 238, 0.96),
-    rgba(255, 235, 225, 0.96)
-  );
-  color: #6a4539;
-
-  box-shadow:
-    0 10px 22px rgba(255, 180, 150, 0.28),
-    inset 0 0 6px rgba(255, 255, 255, 0.55);
-}
-
-.btn.reset:hover {
-  transform: translateY(-2px);
-}
-
-/* COPY BUTTON */
-.btn.copy {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 245, 240, 0.95),
-    rgba(255, 230, 220, 0.95)
-  );
-  color: #8a5649;
-
-  box-shadow:
-    0 10px 20px rgba(255, 180, 150, 0.25),
-    inset 0 0 6px rgba(255, 255, 255, 0.5);
-}
-
-.btn.copy:hover {
-  transform: translateY(-2px);
-}
-
-.btn i {
+.ai-btn i {
+  margin-right: 6px;
   font-size: 18px;
+  color: #e5674e;
 }
 
-/* ======================================= */
-/* OUTPUT BOX */
-/* ======================================= */
-.big-output {
-  min-height: 220px;
-  margin-top: 14px;
+/* Hover */
+.ai-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(255, 120, 100, 0.55),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.55);
 }
 
-#resultBox {
-  white-space: pre-wrap;
-  line-height: 1.6;
-  color: #5c3a2e;
+/* Active */
+.ai-btn:active {
+  transform: translateY(1px);
+}
+
+/* Primary orange button */
+.ai-btn.primary {
+  background: linear-gradient(135deg, #ff9771, #ff6f61, #ff4f5e);
+  color: #fff;
+  box-shadow: 0 12px 38px rgba(255, 120, 100, 0.55);
+}
+
+.ai-btn.primary i {
+  color: #fff;
+}
+
+/* Copy */
+.ai-btn.copy {
+  background: linear-gradient(135deg, rgba(255,190,170,0.65), rgba(255,165,150,0.5));
+}
+
+/* Reset */
+.ai-btn.reset {
+  background: rgba(255, 235, 225, 0.55);
+}
+
+/* =============================== */
+/* OUTPUT */
+/* =============================== */
+
+.output-box {
+  margin-top: 28px;
+  padding: 22px;
+  min-height: 150px;
+
+  background: rgba(255, 240, 230, 0.6);
+  border: 1px solid rgba(255, 200, 180, 0.85);
+  border-radius: 18px;
+
+  backdrop-filter: blur(14px);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+
   font-size: 15px;
+  color: #5c3a2e;
+  line-height: 1.6;
 }
 
-/* ======================================= */
-/* RESPONSIVE (MOBILE / TABLET) */
-/* ======================================= */
-@media (max-width: 980px) {
-  .workspace-grid {
-    grid-template-columns: 1fr;
+
+
+/* =============================== */
+/* RESPONSIVE */
+/* =============================== */
+
+@media (max-width: 600px) {
+  .glass-panel {
+    padding: 22px;
   }
 
-  .sidebar {
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 200, 180, 0.55);
-    box-shadow: none;
-    padding: 24px 20px;
-  }
-
-  .main-panel {
-    padding: 34px 26px;
-  }
-}
-
-@media (max-width: 540px) {
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  textarea#userInput {
-    height: 140px;
-  }
-
-  select {
-    padding: 12px 14px;
+  .button-row {
+    flex-direction: column;
+    gap: 10px;
   }
 }

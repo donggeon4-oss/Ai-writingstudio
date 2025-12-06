@@ -1,8 +1,3 @@
-// ========================================
-// Ultimate AI Writing Studio - PRO Optimized Server
-// (Multi-Pass + Speed Boost + High Quality)
-// ========================================
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -10,186 +5,366 @@ import OpenAI from "openai";
 
 dotenv.config();
 
-// ---- 기본 서버 설정 ----
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "5mb" }));
+
+// 모바일 404 / 캐시 문제 방지
 app.use((req, res, next) => {
   res.setHeader("Cache-Control", "no-store");
   next();
 });
+
+// 정적 파일 제공 (public/tool.html, public/script.js 등)
 app.use(express.static("public"));
 
-// ---- OpenAI 설정 ----
-const OPENAI_KEY = process.env.OPENAI_API_KEY;
-if (!OPENAI_KEY) console.log("❌ OPENAI_API_KEY 없음(.env 확인)");
-
 const openai = new OpenAI({
-  apiKey: OPENAI_KEY,
+  apiKey: process.env.OPENAI_API_KEY
 });
 
-// ---- 모델 선택 ----
-const FAST_MODEL = "gpt-4o-mini";
-const FAST_MODEL_2 = "gpt-4o-mini-tts";  // Multi-Pass용
-const QUALITY_MODEL = "gpt-4o";
-
-// ---- 입력 텍스트 정리 (속도 향상) ----
-function cleanText(t = "") {
-  return t.replace(/\s+/g, " ").trim();
-}
-
-// ---- SYSTEM 프리셋 ----
-const SYSTEM_PRESETS = {
-  summary: `너는 고급 요약 AI다. 핵심을 정확하게 추출한다.`,
-  email: `너는 비즈니스 이메일 작성 전문가다.`,
-  reply: `너는 따뜻한 감정 케어 답변 전문가다.`,
-  report: `너는 전문 보고서 작성 AI다.`,
-  blog: `너는 고급 블로그 글쓰기 전문가다.`,
-  rewrite: `너는 고급 리라이팅 전문가다.`,
-  seo: `너는 SEO 전문 분석가다.`,
-  idea: `너는 창의적 아이디어 전문가다.`,
-  analyze: `너는 글 분석 전문가다.`,
-  imgprompt: `너는 이미지 프롬프트 전문가다.`,
-};
-
-// ===============================================
-// 🔥 Multi-Pass 엔진 (품질 강화)
-// 1) 초안 → 2) 고급 리라이팅 → 3) 최종 정제
-// ===============================================
-async function multiPass(prompt, systemPrompt) {
-  // --- 1차 생성 ---
-  const p1 = await openai.chat.completions.create({
-    model: FAST_MODEL_2,
-    temperature: 0.8,
-    max_tokens: 1100,
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: prompt }
-    ]
-  });
-  const pass1 = p1.choices[0].message.content;
-
-  // --- 2차 자연스러운 문장 흐름 조정 ---
-  const p2 = await openai.chat.completions.create({
-    model: FAST_MODEL_2,
-    temperature: 0.65,
-    max_tokens: 900,
-    messages: [
-      { role: "system", content: "너는 고급 문장 다듬기 전문가다. 흐름을 자연스럽게 재작성하라." },
-      { role: "user", content: pass1 }
-    ]
-  });
-  const pass2 = p2.choices[0].message.content;
-
-  // --- 3차 최종 정제 ---
-  const p3 = await openai.chat.completions.create({
-    model: FAST_MODEL_2,
-    temperature: 0.55,
-    max_tokens: 850,
-    messages: [
-      { role: "system", content: "너는 글 정제 전문가다. 자연스럽고 고급스럽게 정리하라." },
-      { role: "user", content: pass2 }
-    ]
-  });
-
-  return p3.choices[0].message.content;
-}
-
-// ===============================================
-// 🔥 /generate 메인 엔진
-// ===============================================
+// ------------------------------------------------------------
+// MAIN AI ENGINE
+// ------------------------------------------------------------
 app.post("/generate", async (req, res) => {
-  let { userInput, mode, length, tone } = req.body;
+  // ✅ content로 보내든 userInput으로 보내든 둘 다 받게 처리
+  let { userInput, content, mode, length, tone } = req.body;
+  userInput = userInput || content;
 
-  userInput = cleanText(userInput);
+  console.log("📥 /generate body:", {
+    mode,
+    length,
+    tone,
+    userInputPreview: (userInput || "").slice(0, 50)
+  });
 
-  const lengthMap = {
-    short: "700자 내외",
-    normal: "1500자 내외",
-    long: "2500~3500자 내외",
-  };
-  const lengthGuide = lengthMap[length] || "";
+  if (!userInput) {
+    return res
+      .status(400)
+      .json({ error: "userInput(또는 content)가 비어 있습니다." });
+  }
 
+  // 길이 옵션
+  let style = "";
+  if (length === "short") style = "약 700자 내외로 핵심만 간결하게.";
+  if (length === "normal") style = "약 1500자 내외로 자연스럽게.";
+  if (length === "long") style = "약 2500~3500자 정도로 풍부하게.";
+
+  // 톤 옵션
   const toneMap = {
     default: "",
-    warm: "따뜻하고 부드러운 톤",
-    professional: "전문적이고 단정한 톤",
-    emotional: "감성적이고 공감되는 표현",
-    mz: "위트 있는 MZ 스타일",
-    news: "뉴스 기사처럼 간결한 톤",
-    thesis: "논문체의 논리적 톤",
-    copy: "카피라이팅 톤",
-    sns: "SNS 스타일",
-    lecture: "강의처럼 친절한 톤"
+    warm: "따뜻하고 부드러운 말투로 작성해줘.",
+    professional: "전문적이고 단정한 비즈니스 톤으로 작성해줘.",
+    emotional: "감성적이고 공감되는 표현을 사용해줘.",
+    mz: "MZ 세대 스타일로 위트 있게 작성해줘.",
+    news: "뉴스 기사 스타일로 간결하게 작성해줘.",
+    thesis: "논문체로 논리적이고 형식을 갖춰 작성해줘.",
+    copy: "카피라이팅 톤으로 임팩트 있게 작성해줘.",
+    sns: "SNS 스타일로 짧고 캐주얼하게.",
+    lecture: "강의하듯 이해하기 쉽게 작성해줘."
   };
   const toneGuide = toneMap[tone] || "";
 
-  // ===============================================
-  // AUTO → 최고품질 모델 (gpt-4o 단일 패스)
-  // ===============================================
+  //----------------------------------------------------------------
+  // 🚀 1) 자동 글 생성 기능 (auto)
+  //----------------------------------------------------------------
   if (mode === "auto") {
-    const autoPrompt = `
-당신은 최고급 블로그 자동 생성 전문가입니다.
+    const prompt = `
+당신은 최고급 블로그/문서 자동 생성 전문 AI입니다.
 
 [주제]
 ${userInput}
 
 [요청]
-- ${lengthGuide}
+- ${style}
 - ${toneGuide}
-- SEO 최적화 포함
+- SEO 최적화 자동 포함
 - H1 제목 1개
 - H2 소제목 3~6개
-- 각 소제목마다 2~4문단
-- 사람처럼 자연스럽게
-- 중복 금지
-    `.trim();
+- 각 소제목별 문단 2~4개
+- 결론 포함
+- 자연스럽고 사람처럼 쓰기
+- 가독성, 흐름, 논리 우선
+- 중복 문장 금지
+- 실제 블로그에 바로 올릴 수 있는 고품질 글 생성
+
+이 조건을 충족하는 완성된 고품질 글을 작성해줘.
+    `;
 
     try {
-      const r = await openai.chat.completions.create({
-        model: QUALITY_MODEL,
-        temperature: 0.75,
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        temperature: 0.7,
         max_tokens: 2600,
         messages: [
-          { role: "system", content: "너는 최고급 블로그 글 생성 AI다." },
-          { role: "user", content: autoPrompt }
+          {
+            role: "system",
+            content: "너는 고품질 문서/블로그 자동생성 전문 AI다."
+          },
+          { role: "user", content: prompt }
         ]
       });
 
-      return res.json({ result: r.choices[0].message.content });
-    } catch (e) {
-      return res.status(500).json({ error: "AUTO 생성 오류" });
+      const text = response.choices?.[0]?.message?.content?.trim();
+      console.log("✅ auto result preview:", (text || "").slice(0, 100));
+
+      if (!text) {
+        return res
+          .status(500)
+          .json({ error: "OpenAI 응답이 비어 있습니다.(auto)" });
+      }
+
+      return res.json({ result: text });
+    } catch (err) {
+      console.error(
+        "AI Error(auto):",
+        err.response?.data || err.message || err
+      );
+      return res.status(500).json({
+        error: "자동 글 생성 중 오류 발생",
+        detail: err.response?.data || err.message || String(err)
+      });
     }
   }
 
-  // ===============================================
-  // 그 외 모든 기능 → Multi-Pass 고품질 엔진
-  // ===============================================
-  const systemPrompt = SYSTEM_PRESETS[mode] || "너는 고급 글쓰기 전문가다.";
+  //----------------------------------------------------------------
+  // 이하 summary / email / blog / rewrite / seo / step 등
+  //----------------------------------------------------------------
 
-  const finalPrompt = `
-[입력 내용]
+  let prompt = "";
+
+  // SUMMARY
+  if (mode === "summary") {
+    prompt = `
+아래 내용을 ${style}
+${toneGuide}
+자연스럽고 따뜻하게 요약해줘.
+
+[내용]
+${userInput}
+`;
+  }
+
+  // EMAIL
+  if (mode === "email") {
+    prompt = `
+아래 내용을 기반으로 ${toneGuide}
+정중하고 자연스러운 이메일을 작성해줘.
+
+${userInput}
+`;
+  }
+
+  // REPLY
+  if (mode === "reply") {
+    prompt = `
+아래 메시지에 대한 답장을 ${toneGuide} 작성해줘.
+
+[메시지]
+${userInput}
+`;
+  }
+
+  // REPORT
+  if (mode === "report") {
+    prompt = `
+아래 내용을 바탕으로 1페이지 분량의 보고서를 작성해줘.
+${style}
+${toneGuide}
+
+${userInput}
+`;
+  }
+
+  // BLOG FULL
+  if (mode === "blog") {
+    prompt = `
+당신은 최고급 블로그 작가입니다.
+
+[주제]
 ${userInput}
 
-[요청]
-- 길이: ${lengthGuide}
-- 톤: ${toneGuide}
-- 고급스럽고 자연스러운 문장
-- 논리 구조 유지
-- 매끄러운 흐름
-  `.trim();
+요청:
+${style}
+${toneGuide}
+`;
+  }
 
+  // REWRITES
+  if (mode === "rewrite_soft") {
+    prompt = `더 부드럽고 자연스럽게 다시 작성해줘.\n${toneGuide}\n\n${userInput}`;
+  }
+
+  if (mode === "rewrite_pro") {
+    prompt = `전문적이고 고급스럽게 다시 작성해줘.\n${toneGuide}\n\n${userInput}`;
+  }
+
+  if (mode === "rewrite_short") {
+    prompt = `핵심만 남겨 짧게 정리해줘.\n${toneGuide}\n\n${userInput}`;
+  }
+
+  if (mode === "rewrite_long") {
+    prompt = `내용 유지하면서 더 길고 풍부하게 확장해줘.\n${toneGuide}\n\n${userInput}`;
+  }
+
+  // SEO
+  if (mode === "seo") {
+    prompt = `
+아래 글 SEO 분석:
+
+${userInput}
+
+요청:
+- 키워드 8~12개
+- 검색 의도
+- 메타 설명(150자)
+- 개선 포인트 5개
+`;
+  }
+
+  // MULTI
+  if (mode === "multi") {
+    prompt = `
+아래 글을 세 가지 스타일로 재작성:
+
+${userInput}
+
+A) 따뜻한 스타일  
+B) 전문 비즈니스  
+C) SNS형  
+`;
+  }
+
+  // STEP1
+  if (mode === "blog_step1") {
+    prompt = `
+키워드 분석:
+
+${userInput}
+
+요청:
+- 검색 의도
+- 핵심 키워드
+- 타깃 독자
+- 글 방향성
+`;
+  }
+
+  // STEP2
+  if (mode === "blog_step2") {
+    prompt = `
+아래 분석 기반 개요 작성:
+
+${userInput}
+
+요청:
+- H2 4~6개
+- 각 H2 아래 H3 2~3개
+`;
+  }
+
+  // STEP3
+  if (mode === "blog_step3") {
+    prompt = `
+아래 개요 기반 블로그 2000~3000자 작성:
+
+${userInput}
+
+조건:
+- H2/H3 구성 유지
+- SEO 키워드
+- 자연스럽고 따뜻하게
+`;
+  }
+
+  // IDEA
+  if (mode === "idea") {
+    prompt = `
+키워드: ${userInput}
+아이디어 10개 + 한 줄 설명 작성
+`;
+  }
+
+  // SCORE
+  if (mode === "analyze") {
+    prompt = `
+아래 글 분석:
+
+${userInput}
+
+요청:
+- 점수표
+- 강점 3개
+- 개선점 3개
+- 총평  
+`;
+  }
+
+  // IMAGE PROMPT
+  if (mode === "imgprompt") {
+    prompt = `
+아래 내용을 기반으로 이미지 생성 프롬프트 작성:
+
+${userInput}
+
+요청:
+- 짧은 프롬프트
+- 상세 프롬프트
+- 영어 버전도 함께 제공
+`;
+  }
+
+  // 모드가 위에서 하나도 안 걸렸으면 기본 요약 모드로 처리
+  if (!prompt) {
+    prompt = `
+아래 내용을 자연스럽고 읽기 좋게 정리해줘.
+${style}
+${toneGuide}
+
+${userInput}
+`;
+  }
+
+  // ---------------------------------------------------------
+  // OPENAI CALL (공통 처리)
+  // ---------------------------------------------------------
   try {
-    const text = await multiPass(finalPrompt, systemPrompt);
-    return res.json({ result: text });
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      temperature: 0.7,
+      max_tokens: 2200,
+      messages: [
+        {
+          role: "system",
+          content: "너는 프리미엄 문서/콘텐츠 생성 전문 AI다."
+        },
+        { role: "user", content: prompt }
+      ]
+    });
+
+    const text = response.choices?.[0]?.message?.content?.trim();
+    console.log("✅ common result preview:", (text || "").slice(0, 100));
+
+    if (!text) {
+      return res
+        .status(500)
+        .json({ error: "OpenAI 응답이 비어 있습니다.(common)" });
+    }
+
+    res.json({ result: text });
   } catch (err) {
-    console.error("Multi-Pass Error:", err);
-    return res.status(500).json({ error: "AI 생성 오류" });
+    console.error(
+      "AI Error(common):",
+      err.response?.data || err.message || err
+    );
+    res.status(500).json({
+      error: "AI 생성 중 오류 발생",
+      detail: err.response?.data || err.message || String(err)
+    });
   }
 });
 
-// ===============================================
+// ---------------------------------------------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () =>
-  console.log(`🚀 Ultimate AI Writing Studio PRO Running on ${PORT}`)
+  console.log(`🚀 Ultimate AI Writer Running on ${PORT}`)
 );
